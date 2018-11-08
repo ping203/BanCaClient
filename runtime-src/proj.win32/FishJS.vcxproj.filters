@@ -1,0 +1,294 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="resource">
+      <UniqueIdentifier>{ca9c9e15-d942-43a1-aa7a-5f0b74ca1afd}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;jpg;jpeg;jpe;png;manifest</Extensions>
+    </Filter>
+    <Filter Include="win32">
+      <UniqueIdentifier>{ccb2323b-1cfa-41ea-bcf4-ba5f07309396}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes">
+      <UniqueIdentifier>{e93a77e1-af1e-4400-87d3-504b62ebdbb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\core">
+      <UniqueIdentifier>{5b740d7d-d2e2-4c29-be8d-04a80e3ff0a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\curve">
+      <UniqueIdentifier>{a9ab1447-d792-4da3-b0bb-08a9902aff5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\DisplayLayer">
+      <UniqueIdentifier>{ccf45fd4-f390-41d7-a2b9-2dff829aec72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\G3D">
+      <UniqueIdentifier>{8d519a85-587f-42c4-bb30-21c97b5ea162}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\GameLogic">
+      <UniqueIdentifier>{a1797aa7-d230-4890-b896-bd14741970a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\math">
+      <UniqueIdentifier>{7fa2fc30-7e08-434a-9dbf-0cb3a00ad1dc}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\AppDelegate.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\core\Curve.cpp">
+      <Filter>Classes\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\core\CurvePath.cpp">
+      <Filter>Classes\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\core\Interpolations.cpp">
+      <Filter>Classes\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\DisplayLayer\Display3DLayer.cpp">
+      <Filter>Classes\DisplayLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\G3D\GBundle3D.cpp">
+      <Filter>Classes\G3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\G3D\GEnvironment.cpp">
+      <Filter>Classes\G3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\G3D\GFrameBufferObject.cpp">
+      <Filter>Classes\G3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\G3D\GMainLight.cpp">
+      <Filter>Classes\G3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\G3D\GMaterial.cpp">
+      <Filter>Classes\G3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\G3D\GMesh.cpp">
+      <Filter>Classes\G3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\G3D\GScene3D.cpp">
+      <Filter>Classes\G3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\G3D\GShader.cpp">
+      <Filter>Classes\G3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\G3D\GShadowMapTexture.cpp">
+      <Filter>Classes\G3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\G3D\GSprite3D.cpp">
+      <Filter>Classes\G3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\G3D\KMesh.cpp">
+      <Filter>Classes\G3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\GameLogic\Entity.cpp">
+      <Filter>Classes\GameLogic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\GameLogic\GameManager.cpp">
+      <Filter>Classes\GameLogic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\GameLogic\Path.cpp">
+      <Filter>Classes\GameLogic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\math\Box3.cpp">
+      <Filter>Classes\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\math\Circle3.cpp">
+      <Filter>Classes\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\math\Euler.cpp">
+      <Filter>Classes\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\math\Frustum.cpp">
+      <Filter>Classes\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\math\Math.cpp">
+      <Filter>Classes\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\math\Matrix3.cpp">
+      <Filter>Classes\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\math\Matrix4.cpp">
+      <Filter>Classes\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\math\Quaternion.cpp">
+      <Filter>Classes\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\math\Sphere.cpp">
+      <Filter>Classes\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\math\Vector2.cpp">
+      <Filter>Classes\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\math\Vector3.cpp">
+      <Filter>Classes\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\math\Vector4.cpp">
+      <Filter>Classes\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\AbtractDisplayLayer.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\GameLayer.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Classes\AppDelegate.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="main.h">
+      <Filter>win32</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="..\Classes\core\Curve.h">
+      <Filter>Classes\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\core\CurvePath.h">
+      <Filter>Classes\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\core\Interpolations.h">
+      <Filter>Classes\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\curve\CubicBezier.h">
+      <Filter>Classes\curve</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\curve\Ellipse.h">
+      <Filter>Classes\curve</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\curve\Line.h">
+      <Filter>Classes\curve</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\curve\QuadraticBezier.h">
+      <Filter>Classes\curve</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\curve\Spline.h">
+      <Filter>Classes\curve</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\DisplayLayer\Display3DLayer.hpp">
+      <Filter>Classes\DisplayLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\G3D\GBundle3D.h">
+      <Filter>Classes\G3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\G3D\GEnvironment.h">
+      <Filter>Classes\G3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\G3D\GFrameBufferObject.h">
+      <Filter>Classes\G3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\G3D\GMainLight.h">
+      <Filter>Classes\G3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\G3D\GMaterial.h">
+      <Filter>Classes\G3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\G3D\GMesh.h">
+      <Filter>Classes\G3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\G3D\GScene3D.h">
+      <Filter>Classes\G3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\G3D\GShader.h">
+      <Filter>Classes\G3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\G3D\GShadowMapTexture.h">
+      <Filter>Classes\G3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\G3D\GSprite3D.h">
+      <Filter>Classes\G3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\G3D\KMesh.h">
+      <Filter>Classes\G3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\GameLogic\Entity.h">
+      <Filter>Classes\GameLogic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\GameLogic\GameManager.h">
+      <Filter>Classes\GameLogic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\GameLogic\Path.hpp">
+      <Filter>Classes\GameLogic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\math\Box2.h">
+      <Filter>Classes\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\math\Box3.h">
+      <Filter>Classes\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\math\Circle3.h">
+      <Filter>Classes\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\math\Cylindrical.h">
+      <Filter>Classes\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\math\Euler.h">
+      <Filter>Classes\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\math\Frustum.h">
+      <Filter>Classes\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\math\Line3.h">
+      <Filter>Classes\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\math\Math2.h">
+      <Filter>Classes\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\math\Matrix3.h">
+      <Filter>Classes\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\math\Matrix4.h">
+      <Filter>Classes\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\math\osdecl.h">
+      <Filter>Classes\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\math\Plane.h">
+      <Filter>Classes\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\math\Quaternion2.h">
+      <Filter>Classes\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\math\Ray.h">
+      <Filter>Classes\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\math\simplesignal.h">
+      <Filter>Classes\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\math\Sphere.h">
+      <Filter>Classes\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\math\Spherical.h">
+      <Filter>Classes\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\math\Triangle.h">
+      <Filter>Classes\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\math\Vector2.h">
+      <Filter>Classes\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\math\Vector3.h">
+      <Filter>Classes\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\math\Vector4.h">
+      <Filter>Classes\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\GameLayer.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\AbtractDisplayLayer.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="game.rc">
+      <Filter>resource</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\game.ico">
+      <Filter>resource</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
