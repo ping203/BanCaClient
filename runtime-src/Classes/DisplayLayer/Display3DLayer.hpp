@@ -20,6 +20,7 @@ public:
     
     CREATE_FUNC(Display3DLayer);
     bool init() override;
+	virtual void update(float dt);
 public:
     Camera *mainCam;
     

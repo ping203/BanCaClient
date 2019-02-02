@@ -1,7 +1,7 @@
 #include "AppDelegate.h"
 
 #include "scripting/js-bindings/auto/jsb_cocos2dx_3d_auto.hpp"
-#include "scripting/js-bindings/auto/jsb_engine_auto.hpp"
+#include "scripting/js-bindings/auto/jsb_banca_auto.hpp"
 #include "scripting/js-bindings/auto/jsb_cocos2dx_3d_extension_auto.hpp"
 #include "scripting/js-bindings/auto/jsb_cocos2dx_auto.hpp"
 #include "scripting/js-bindings/auto/jsb_cocos2dx_builder_auto.hpp"
@@ -12,7 +12,6 @@
 #include "scripting/js-bindings/auto/jsb_cocos2dx_spine_auto.hpp"
 #include "scripting/js-bindings/auto/jsb_cocos2dx_studio_auto.hpp"
 #include "scripting/js-bindings/auto/jsb_cocos2dx_ui_auto.hpp"
-#include "scripting/js-bindings/auto/jsb_engine_auto.hpp"
 #include "scripting/js-bindings/manual/3d/jsb_cocos2dx_3d_manual.h"
 #include "scripting/js-bindings/manual/chipmunk/js_bindings_chipmunk_registration.h"
 #include "scripting/js-bindings/manual/cocosbuilder/js_bindings_ccbreader.h"
@@ -94,13 +93,15 @@ bool AppDelegate::applicationDidFinishLaunching()
 #if(CC_TARGET_PLATFORM == CC_PLATFORM_WP8) || (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
         glview = cocos2d::GLViewImpl::create("FishJS");
 #else
-        glview = cocos2d::GLViewImpl::createWithRect("FishJS", Rect(0,0,568,320));
+        glview = cocos2d::GLViewImpl::createWithRect("FishJS", Rect(0,0,1280,720));
 #endif
         director->setOpenGLView(glview);
 }
 
     // set FPS. the default value is 1.0/60 if you don't call this
     director->setAnimationInterval(1.0f / 60);
+	director->setDisplayStats(true);
+
     
     FileUtils::getInstance()->addSearchPath("res/");
 
@@ -150,7 +151,7 @@ bool AppDelegate::applicationDidFinishLaunching()
     // 3d extension can be commented out to reduce the package
     sc->addRegisterCallback(register_all_cocos2dx_3d_extension);
     
-    sc->addRegisterCallback(register_all_cocos2dx_engine);
+    sc->addRegisterCallback(register_all_banca_engine);
 
 #if CC_USE_3D_PHYSICS && CC_ENABLE_BULLET_INTEGRATION
     // Physics 3d can be commented out to reduce the package
@@ -187,6 +188,10 @@ bool AppDelegate::applicationDidFinishLaunching()
     ScriptEngineProtocol *engine = ScriptingCore::getInstance();
     ScriptEngineManager::getInstance()->setScriptEngine(engine);
     ScriptingCore::getInstance()->runScript("main.js");
+
+// 	auto scene = Scene::create();
+// 	scene->addChild(GameLayer::create());
+// 	Director::getInstance()->runWithScene(scene);
     
 
     return true;

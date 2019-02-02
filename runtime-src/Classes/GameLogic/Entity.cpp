@@ -58,13 +58,13 @@ void Fish::startWithPath(Path *_path, float timeElapsed)
     path = _path;
     paused = false;
     time = timeElapsed;
-	//update(0);
+	_path->setPathListener(CC_CALLBACK_1(Fish::onNewCurve,this));
+	update(0);
 }
 
 void Fish::onNewCurve(three::extras::Curve* curve){
 	if (!enable_flip || !_nodeDisplay)
 		return;
-	//cc.log(curve);
 	float offset = 0;
 	if (dynamic_cast<CubicBezier*>(curve))
 	{
@@ -80,6 +80,12 @@ void Fish::onNewCurve(three::extras::Curve* curve){
 	}
 
 	Sprite* sp = (Sprite*)(_nodeDisplay->getChildByTag(0));
+	if (sp)
+	{
+		sp->setFlippedX(offset > 0);
+	}
+
+	sp = (Sprite*)(_nodeDisplay->getChildByTag(1));
 	if (sp)
 	{
 		sp->setFlippedX(offset > 0);
@@ -105,7 +111,8 @@ void Fish::update(float dt)
     
     Vec2 pos = path->getPositionFromTime(time);
     float angle = path->getCurrentAngleRad();
-    setTransform(Vec2(pos.x / PM_RATIO,pos.y/PM_RATIO), -angle );
+	if (dt>0)
+		setTransform(Vec2(pos.x / PM_RATIO,pos.y/PM_RATIO), -angle );
 
     if(_nodeDisplay)
     {
@@ -120,6 +127,12 @@ void Fish::update(float dt)
         }
         
     }
+
+	if (enable_check_outside)
+	{
+		Rect rect = CCRectMake(-1.5, -1.5, WORLD_WIDTH + 3, WORLD_HEIGHT + 3);
+		outsite = !rect.containsPoint(Vec2(pos.x / PM_RATIO, pos.y / PM_RATIO));
+	}
     
     
 }
@@ -148,3 +161,77 @@ void Bullet::update(float dt)
     }
 }
 
+
+// Fish3D
+
+Fish3D::Fish3D() : Entity()
+{
+	paused = true;
+	_type = FISH3D;
+	path = NULL;
+	enable_auto_die = true;
+}
+Fish3D::~Fish3D()
+{
+	if (path)
+		path->release();
+}
+
+void Fish3D::pause(bool pause)
+{
+	paused = pause;
+}
+
+void Fish3D::start(float timeElapsed)
+{
+	paused = false;
+	time = timeElapsed;
+	
+	update(0);
+}
+
+
+
+void Fish3D::update(float dt)
+{
+	if (paused)
+		return;
+	time += dt;
+	if (time >= path->getDuration())
+	{
+		if (_finishFunc)
+		{
+			_finishFunc(this);
+		}
+		if (enable_auto_die)
+			need_remove = true;
+		time = 0;
+	}
+
+// 	Vec2 pos = path->getPositionFromTime(time);
+// 	float angle = path->getCurrentAngleRad();
+// 	if (dt > 0)
+// 		setTransform(Vec2(pos.x / PM_RATIO, pos.y / PM_RATIO), -angle);
+
+
+// 	if (enable_check_outside)
+// 	{
+// 		Rect rect = CCRectMake(-1.5, -1.5, WORLD_WIDTH + 3, WORLD_HEIGHT + 3);
+// 		outsite = !rect.containsPoint(Vec2(pos.x / PM_RATIO, pos.y / PM_RATIO));
+// 	}
+
+	if (_nodeDisplay)
+	{
+		Mat4 transform = path->getTransformFromTimeline(time);
+		Vec3 pos;
+		cocos2d::Quaternion rot;
+		transform.getTranslation(&pos);
+		transform.getRotation(&rot);
+		_nodeDisplay->setPosition3D(pos);
+		_nodeDisplay->setRotationQuat(rot);
+	}
+
+	
+
+
+}

@@ -68,6 +68,8 @@ bool GSprite3D::initFromPath(string modelPath, bool shadow)
 	NodeDatas* nodeDatas = new (std::nothrow) NodeDatas();
 	if (loadFromFile(modelPath, nodeDatas, meshdatas, materialdatas))
 	{
+
+
 		if (initFrom(*nodeDatas, *meshdatas, *materialdatas))
 		{
 			//add to cache

@@ -5,6 +5,8 @@
 #include "Path.hpp"
 
 #include <vector>
+#include "Path3D.h"
+
 using namespace std;
 using namespace three::extras::curve;
 using namespace three::extras;
@@ -41,7 +43,8 @@ public:
     enum Type{
         FISH = 0,
         WALL,
-        BULLET
+        BULLET,
+		FISH3D
     };
     
     virtual Ref*  autorelease(){return this;};
@@ -116,6 +119,14 @@ public:
 		enable_flip = flip;
 	}
 	void onNewCurve(three::extras::Curve* curve);
+
+
+	void enableCheckOutsite(bool check){
+		enable_check_outside = check;
+	}
+	bool isOutsite() {
+		return outsite;
+	}
     
     virtual void update(float dt);
 public:
@@ -124,6 +135,9 @@ public:
     float time;
     bool enable_auto_die = true;
 	bool enable_flip = false;
+
+	bool enable_check_outside = false;
+	bool outsite = false;
 };
 
 class Wall : public Entity
@@ -161,6 +175,44 @@ public:
 	void setVelLength(float vv){
 		velLength = vv;
 	}
+};
+
+
+class Fish3D : public Entity
+{
+public:
+	Fish3D();
+	~Fish3D();
+
+	void pause(bool paused);
+	void resume(){
+		pause(false);
+	}
+	void start( float timeElapsed);
+	
+	void setPath3D(Path3D *_path)
+	{
+		path = _path;
+	}
+	void enableAutoDie(bool die){
+		enable_auto_die = die;
+	}
+	void enableCheckOutsite(bool check){
+		enable_check_outside = check;
+	}
+	bool isOutsite() {
+		return outsite;
+	}
+
+	virtual void update(float dt);
+public:
+	bool paused;
+	Path3D *path;
+	float time;
+	bool enable_auto_die = true;
+
+	bool enable_check_outside = false;
+	bool outsite = false;
 };
 
 

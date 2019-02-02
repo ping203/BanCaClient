@@ -7,6 +7,10 @@
 using namespace std;
 USING_NS_CC;
 
+
+#define WORLD_WIDTH 40
+#define WORLD_HEIGHT 22.5f
+
 extern float PM_RATIO;
 class Setting : public Ref
 {
@@ -14,7 +18,7 @@ public:
     Setting(){
         using_constant_fps = true;
         FPS = 1.0/60;
-        world_size = Vec2(40,22.5);
+        world_size = Vec2(WORLD_WIDTH,WORLD_HEIGHT);
         gravity = Vec2(0,0);
         bullet_vel = 40;
         PM_RATIO = 32;
@@ -32,6 +36,7 @@ public:
 
 
 typedef std::function<void(Entity *e1,Entity *e2,Vec2 pointCollide)> EntityCollisionListener;   // callback khi cham
+typedef std::function<void(Entity *fish)> RealFishDestroyDelegate;   // callback khi cham
 typedef std::function<bool(Entity *e1,Entity *e2,Vec2 pointCollide)> OnContactPreSolve;         // callback khi chuan bi tinh toan va cham
 typedef std::function<void(Fish*,Path*)> PathListener; // callback khi fish done path
 
@@ -54,7 +59,10 @@ public:
 	Fish* getFishByPos(Vec2 pos);
     
 	virtual void destroyEntity(Entity *entity);
+	virtual void onRealDestroyFish(Entity *fish);
+	void destroyAllEntity(bool removeNode = true);
 	virtual void update(float dt);
+	virtual void _doUpdate(float dt);
     void setEntityCollisionListener(const EntityCollisionListener& _lis)
     {
         _entityCollisionListener = _lis;
@@ -63,6 +71,9 @@ public:
     {
         _contactPreSolve = _lis;
     }
+	void setFishDestroyDelegate(const RealFishDestroyDelegate& _lis){
+		_fishDestroyDelegate = _lis;
+	}
     
     virtual void PreSolve(b2Contact* contact, const b2Manifold* oldManifold);
     virtual void BeginContact(b2Contact* contact);
@@ -84,7 +95,10 @@ protected:
 
     ContactListener *c_listener;
     EntityCollisionListener _entityCollisionListener;
+	RealFishDestroyDelegate _fishDestroyDelegate;
     OnContactPreSolve _contactPreSolve;
+
+	float accumulator = 0;
     
 };
 

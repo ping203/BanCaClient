@@ -26,9 +26,9 @@ GMesh::GMesh() : Mesh()
 	hasNormal = false;
 	hasSpecular = false;
 
-	depthProgramState = GLProgramState::create(GShader::getInstance()->getGLProgram(GShader::G_SHADER_DEPTH));
-	depthMaterial = GMaterial::createWithGLProgramState(depthProgramState);
-	depthMaterial->retain();
+// 	depthProgramState = GLProgramState::create(GShader::getInstance()->getGLProgram(GShader::G_SHADER_DEPTH));
+// 	depthMaterial = GMaterial::createWithGLProgramState(depthProgramState);
+// 	depthMaterial->retain();
 
 	mainProgramState = NULL;
 }
@@ -36,7 +36,7 @@ GMesh::GMesh() : Mesh()
 
 GMesh::~GMesh()
 {
-	delete depthMaterial;
+	//delete depthMaterial;
 }
 
 GMesh* GMesh::create(const std::string& name, MeshIndexData* indexData, MeshSkin* skin)
@@ -68,10 +68,10 @@ void GMesh::setMaterial(GMaterial *material)
 				auto programState = pass->getGLProgramState();
 
 				// material
-				programState->setUniformFloat("material_shininess", g_material->shinisess);
+				//programState->setUniformFloat("material_shininess", g_material->shinisess);
 				//programState->setUniformVec3("material_ambient",Vec3(0,0,0));
 				//programState->setUniformVec3("material_diffuse", g_material->diffuseColor);
-				programState->setUniformVec3("material_specular", g_material->specularColor);
+				//programState->setUniformVec3("material_specular", g_material->specularColor);
 
 				programState->setUniformInt("u_hasSkin", _skin ? 1 : 0);
 
@@ -81,10 +81,10 @@ void GMesh::setMaterial(GMaterial *material)
 				programState->setUniformFloat("light_ambient_coefficient", GMainLight::AMBIENT_COEFFICIENT);
 				//programState->setUniformFloat("light_attenuation", GMainLight::ATTENUATION);
 
-				programState->setUniformFloat("spot_light_cullOff", GMainLight::cullOff);
-				programState->setUniformFloat("spot_light_cutOff", GMainLight::cutOff);
+// 				programState->setUniformFloat("spot_light_cullOff", GMainLight::cullOff);
+// 				programState->setUniformFloat("spot_light_cutOff", GMainLight::cutOff);
 
-				programState->setUniformFloat("light_specular", GMainLight::specular);
+				//programState->setUniformFloat("light_specular", GMainLight::specular);
 
 // 				Vec3 viewPos; Camera::getVisitingCamera()->getNodeToWorldTransform().getTranslation(&viewPos);
 // 				programState->setUniformVec3("u_viewPosition", viewPos
@@ -114,13 +114,13 @@ void GMesh::setMaterial(GMaterial *material, bool inDepth)
 				auto programState = pass->getGLProgramState();
 
 				// material
-				programState->setUniformFloat("material_shininess", g_material->shinisess);
+				//programState->setUniformFloat("material_shininess", g_material->shinisess);
 				//programState->setUniformVec3("material_ambient",Vec3(0,0,0));
 				//programState->setUniformVec3("material_diffuse", g_material->diffuseColor);
-				programState->setUniformVec3("material_specular", g_material->specularColor);
+				//programState->setUniformVec3("material_specular", g_material->specularColor);
 
-				programState->setUniformFloat("spot_light_cullOff", GMainLight::cullOff);
-				programState->setUniformFloat("spot_light_cutOff", GMainLight::cutOff);
+// 				programState->setUniformFloat("spot_light_cullOff", GMainLight::cullOff);
+// 				programState->setUniformFloat("spot_light_cutOff", GMainLight::cutOff);
 			}
 		}
 	}
@@ -214,6 +214,8 @@ void GMesh::onDraw(Renderer* renderer, float globalZOrder, const Mat4& transform
 		{
 			programState->setUniformVec4("u_color", color);
 			//programState->setUniformInt("u_hasShadow", hasShadow ? 1 : 0);
+			programState->setUniformMat4("u_MMatrix", transform);							// Model matrix
+
 
 			// add Light
 			if (GMainLight::dirtyFlag)
@@ -223,10 +225,10 @@ void GMesh::onDraw(Renderer* renderer, float globalZOrder, const Mat4& transform
 				programState->setUniformFloat("light_ambient_coefficient", GMainLight::AMBIENT_COEFFICIENT);
 				//programState->setUniformFloat("light_attenuation", GMainLight::ATTENUATION);
 
-				programState->setUniformFloat("spot_light_cullOff", GMainLight::cullOff);
-				programState->setUniformFloat("spot_light_cutOff", GMainLight::cutOff);
+// 				programState->setUniformFloat("spot_light_cullOff", GMainLight::cullOff);
+// 				programState->setUniformFloat("spot_light_cutOff", GMainLight::cutOff);
 
-				programState->setUniformFloat("light_specular", GMainLight::specular);
+				//programState->setUniformFloat("light_specular", GMainLight::specular);
 			}
 
 			//material
@@ -240,6 +242,10 @@ void GMesh::onDraw(Renderer* renderer, float globalZOrder, const Mat4& transform
 			{
 				Vec3 viewPos; Camera::getVisitingCamera()->getNodeToWorldTransform().getTranslation(&viewPos);
 				programState->setUniformVec3("u_viewPosition", viewPos);
+			}
+			if (GEnvironment::getInstance()->isEnableCausticAnimation())
+			{
+				//programState->setUniformTexture("u_causticTex", GEnvironment::ACTIVE_CAUSTIC_TEX);
 			}
 			
 			// model matrix
@@ -255,7 +261,7 @@ void GMesh::onDraw(Renderer* renderer, float globalZOrder, const Mat4& transform
 		}
 		else
 		{
-// 			programState->setUniformMat4("u_MMatrix", transform);							// Model matrix
+ 			programState->setUniformMat4("u_MMatrix", transform);							// Model matrix
 // 			programState->setUniformMat4("u_VPLightMatrix", GEnvironment::VP_LIGHT_MATRIX);		// VP Light space matrix
 		}	
 	}

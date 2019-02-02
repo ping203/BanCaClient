@@ -32,7 +32,7 @@ public:
     void clean();
     void calculate();
     float getLength();
-    Vec2 getPositionFromTime(float t);
+    Vec2 getPositionFromTime(float t );
     float getCurrentAngle();
     float getCurrentAngleRad();
 

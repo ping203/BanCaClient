@@ -11,6 +11,7 @@ GameManager::GameManager(Setting *_setting)
     c_listener->gameMgr = this;
     //_entityCollisionListener = NULL;
     PM_RATIO = m_setting->PM_RATIO;
+	accumulator = 0.0f;
    
     initWorld();
 }
@@ -94,7 +95,19 @@ Entity* GameManager::createWall(Entity *m_wall)
 
 void GameManager::update(float dt)
 {
-    
+	if (dt >= 0.1)
+		dt = 0.1;
+	this->accumulator += dt;
+
+	while (accumulator >= m_setting->FPS)
+	{
+		_doUpdate(m_setting->FPS);
+		accumulator -= m_setting->FPS;
+	}
+}
+
+void GameManager::_doUpdate(float dt)
+{
     if(!m_world)
         return;
 	for (vector<Entity *>::iterator iter = m_entities.begin(); iter != m_entities.end(); iter++)
@@ -121,6 +134,10 @@ void GameManager::update(float dt)
     {
         if(m_entities[count]->need_remove)
         {
+			if (m_entities[count]->getType() == Entity::FISH)
+			{
+				onRealDestroyFish(m_entities[count]);
+			}
             if(m_entities[count]->_nodeDisplay)
             {
                 m_entities[count]->_nodeDisplay->removeFromParent();
@@ -214,6 +231,35 @@ Entity* GameManager::shootBullet(Entity *bullet,Vec2 start_pos, Vec2 vel_dir)
 void GameManager::destroyEntity(Entity *entity)
 {
     entity->need_remove = true;
+}
+
+void GameManager::onRealDestroyFish(Entity *entity)
+{
+	if (_fishDestroyDelegate != NULL)
+	{
+		_fishDestroyDelegate(entity);
+	}
+}
+
+void GameManager::destroyAllEntity(bool removeNode){
+	int count = m_entities.size();
+	while (count--)
+	{
+		if (m_entities[count]->_nodeDisplay)
+		{
+			if (removeNode)
+				m_entities[count]->_nodeDisplay->removeFromParent();
+			else if (m_entities[count]->_nodeDisplay->getChildByTag(0))
+			{
+				m_entities[count]->_nodeDisplay->getChildByTag(0)->stopAllActions();
+				if (m_entities[count]->_nodeDisplay->getChildByTag(1))
+					m_entities[count]->_nodeDisplay->getChildByTag(1)->stopAllActions();
+
+			}
+		}
+		m_world->DestroyBody(m_entities[count]->_body);
+	}
+	m_entities.clear();
 }
 
 

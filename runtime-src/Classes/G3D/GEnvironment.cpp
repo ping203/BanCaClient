@@ -7,6 +7,7 @@
 
 Mat4 GEnvironment::VP_LIGHT_MATRIX;
 Texture2D *GEnvironment::DEPTH_TEX;
+Texture2D * GEnvironment::ACTIVE_CAUSTIC_TEX = NULL;
 
 Mat4 GEnvironment::BIAS_MATRIX;
 Mat4 GEnvironment::DEPTH_BIAS_MVP;
@@ -17,6 +18,7 @@ GEnvironment::GEnvironment()
 {
 	enableShadow = false;
 	DEPTH_CAM_FLAG = CameraFlag::USER8;
+	timeCount = 0;
 }
 
 GEnvironment *g_EnvIns = NULL;
@@ -28,7 +30,11 @@ GEnvironment::~GEnvironment()
 GEnvironment * GEnvironment::getInstance()
 {
 	if (g_EnvIns == NULL)
+	{
 		g_EnvIns = new GEnvironment();
+		Director::getInstance()->getScheduler()->scheduleUpdateForTarget(g_EnvIns, 1, false);
+	}
+		
 	return g_EnvIns;
 }
 
@@ -38,6 +44,7 @@ void GEnvironment::setupLight(Vec3 position, Vec3 intensities, float ambient, fl
 	GMainLight::INTENSITIES = intensities;
 	GMainLight::AMBIENT_COEFFICIENT = ambient;
 	GMainLight::ATTENUATION = anttenuation;
+
 
 
 	GMainLight::cullOff = cosf(cullAngle * M_PI / 180.0);
@@ -61,6 +68,61 @@ void GEnvironment::setCameraUpdate(bool update)
 bool GEnvironment::isSupportDepthTexture()
 {
 	return true;
+}
+
+void GEnvironment::addCausticTexture(std::string texPath)
+{
+	auto tex = Director::getInstance()->getTextureCache()->addImage(texPath);
+	if (tex)
+	{
+		Texture2D::TexParams params;
+		params.minFilter = GL_NEAREST;
+		params.magFilter = GL_NEAREST;
+		params.wrapS = GL_REPEAT;
+		params.wrapT = GL_REPEAT;
+
+		tex->setTexParameters(params);
+		tex->retain();
+
+		causticTextures.push_back(tex);
+
+		ACTIVE_CAUSTIC_TEX = tex;
+	}
+}
+
+void GEnvironment::cleanCausticTexture()
+{
+	for (int i = 0; i < causticTextures.size(); i++)
+	{
+		Director::getInstance()->getTextureCache()->removeTexture(causticTextures[i]);
+	}
+	causticTextures.clear();
+	ACTIVE_CAUSTIC_TEX = NULL;
+}
+
+void GEnvironment::runCausticAnimation(bool run, float deltaTime)
+{
+	enableCausticAnimation = run;
+	dtCausticAnim = deltaTime;
+	
+}
+
+void GEnvironment::update(float dt)
+{
+	
+	if (causticTextures.size() == 0)
+		return;
+	timeCount += dt;
+	if (timeCount >= dtCausticAnim)
+	{
+		currentCaustic++;
+		if (currentCaustic >= causticTextures.size())
+		{
+			currentCaustic = 0;
+		}
+		timeCount = 0;
+		ACTIVE_CAUSTIC_TEX = causticTextures[currentCaustic];
+	}
 }
 
 void GEnvironment::setupShadow(Node *parent, int texWidth, int texHeight, int depthCamFlag)
