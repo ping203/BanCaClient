@@ -28,6 +28,7 @@ bool js_banca_engine_GEnvironment_isEnableCausticAnimation(JSContext *cx, uint32
 bool js_banca_engine_GEnvironment_getDeltaTimeAnim(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_banca_engine_GEnvironment_setEnabledShadow(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_banca_engine_GEnvironment_addCausticTexture(JSContext *cx, uint32_t argc, jsval *vp);
+bool js_banca_engine_GEnvironment_update(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_banca_engine_GEnvironment_isEnabledShadow(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_banca_engine_GEnvironment_isSupportDepthTexture(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_banca_engine_GEnvironment_cleanCausticTexture(JSContext *cx, uint32_t argc, jsval *vp);
@@ -112,8 +113,9 @@ bool js_banca_engine_Entity_constructor(JSContext *cx, uint32_t argc, jsval *vp)
 void js_banca_engine_Entity_finalize(JSContext *cx, JSObject *obj);
 void js_register_banca_engine_Entity(JSContext *cx, JS::HandleObject global);
 void register_all_banca_engine(JSContext* cx, JS::HandleObject obj);
-bool js_banca_engine_Entity_setFinishFunc(JSContext *cx, uint32_t argc, jsval *vp);
+bool js_banca_engine_Entity_setUserData(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_banca_engine_Entity_setUpdateFunc(JSContext *cx, uint32_t argc, jsval *vp);
+bool js_banca_engine_Entity_getUserData(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_banca_engine_Entity_getBodyVelocity(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_banca_engine_Entity_setTransform(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_banca_engine_Entity_getType(JSContext *cx, uint32_t argc, jsval *vp);
@@ -126,6 +128,7 @@ bool js_banca_engine_Entity_getBodyPosition(JSContext *cx, uint32_t argc, jsval 
 bool js_banca_engine_Entity_setNodeDisplay(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_banca_engine_Entity_release(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_banca_engine_Entity_setPosition(JSContext *cx, uint32_t argc, jsval *vp);
+bool js_banca_engine_Entity_setFinishFunc(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_banca_engine_Entity_getNodeDisplay(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_banca_engine_Entity_setVelocity(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_banca_engine_Entity_Entity(JSContext *cx, uint32_t argc, jsval *vp);
@@ -184,6 +187,7 @@ bool js_banca_engine_Fish3D_resume(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_banca_engine_Fish3D_enableAutoDie(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_banca_engine_Fish3D_update(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_banca_engine_Fish3D_start(JSContext *cx, uint32_t argc, jsval *vp);
+bool js_banca_engine_Fish3D_setNodeDebug2D(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_banca_engine_Fish3D_isOutsite(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_banca_engine_Fish3D_Fish3D(JSContext *cx, uint32_t argc, jsval *vp);
 

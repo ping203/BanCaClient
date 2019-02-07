@@ -247,6 +247,26 @@ bool js_banca_engine_GEnvironment_addCausticTexture(JSContext *cx, uint32_t argc
     JS_ReportError(cx, "js_banca_engine_GEnvironment_addCausticTexture : wrong number of arguments: %d, was expecting %d", argc, 1);
     return false;
 }
+bool js_banca_engine_GEnvironment_update(JSContext *cx, uint32_t argc, jsval *vp)
+{
+    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    bool ok = true;
+    JS::RootedObject obj(cx, args.thisv().toObjectOrNull());
+    js_proxy_t *proxy = jsb_get_js_proxy(obj);
+    GEnvironment* cobj = (GEnvironment *)(proxy ? proxy->ptr : NULL);
+    JSB_PRECONDITION2( cobj, cx, false, "js_banca_engine_GEnvironment_update : Invalid Native Object");
+    if (argc == 1) {
+        double arg0 = 0;
+        ok &= JS::ToNumber( cx, args.get(0), &arg0) && !std::isnan(arg0);
+        JSB_PRECONDITION2(ok, cx, false, "js_banca_engine_GEnvironment_update : Error processing arguments");
+        cobj->update(arg0);
+        args.rval().setUndefined();
+        return true;
+    }
+
+    JS_ReportError(cx, "js_banca_engine_GEnvironment_update : wrong number of arguments: %d, was expecting %d", argc, 1);
+    return false;
+}
 bool js_banca_engine_GEnvironment_isEnabledShadow(JSContext *cx, uint32_t argc, jsval *vp)
 {
     JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
@@ -480,6 +500,7 @@ void js_register_banca_engine_GEnvironment(JSContext *cx, JS::HandleObject globa
         JS_FN("getDeltaTimeAnim", js_banca_engine_GEnvironment_getDeltaTimeAnim, 0, JSPROP_PERMANENT | JSPROP_ENUMERATE),
         JS_FN("setEnabledShadow", js_banca_engine_GEnvironment_setEnabledShadow, 1, JSPROP_PERMANENT | JSPROP_ENUMERATE),
         JS_FN("addCausticTexture", js_banca_engine_GEnvironment_addCausticTexture, 1, JSPROP_PERMANENT | JSPROP_ENUMERATE),
+        JS_FN("update", js_banca_engine_GEnvironment_update, 1, JSPROP_PERMANENT | JSPROP_ENUMERATE),
         JS_FN("isEnabledShadow", js_banca_engine_GEnvironment_isEnabledShadow, 0, JSPROP_PERMANENT | JSPROP_ENUMERATE),
         JS_FN("isSupportDepthTexture", js_banca_engine_GEnvironment_isSupportDepthTexture, 0, JSPROP_PERMANENT | JSPROP_ENUMERATE),
         JS_FN("cleanCausticTexture", js_banca_engine_GEnvironment_cleanCausticTexture, 0, JSPROP_PERMANENT | JSPROP_ENUMERATE),
@@ -1542,50 +1563,32 @@ void js_register_banca_engine_HoldFishInfo(JSContext *cx, JS::HandleObject globa
 JSClass  *jsb_Entity_class;
 JSObject *jsb_Entity_prototype;
 
-bool js_banca_engine_Entity_setFinishFunc(JSContext *cx, uint32_t argc, jsval *vp)
+bool js_banca_engine_Entity_setUserData(JSContext *cx, uint32_t argc, jsval *vp)
 {
     JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
     bool ok = true;
     JS::RootedObject obj(cx, args.thisv().toObjectOrNull());
     js_proxy_t *proxy = jsb_get_js_proxy(obj);
     Entity* cobj = (Entity *)(proxy ? proxy->ptr : NULL);
-    JSB_PRECONDITION2( cobj, cx, false, "js_banca_engine_Entity_setFinishFunc : Invalid Native Object");
+    JSB_PRECONDITION2( cobj, cx, false, "js_banca_engine_Entity_setUserData : Invalid Native Object");
     if (argc == 1) {
-        std::function<void (Entity *)> arg0;
+        cocos2d::Ref* arg0 = nullptr;
         do {
-		    if(JS_TypeOfValue(cx, args.get(0)) == JSTYPE_FUNCTION)
-		    {
-		        JS::RootedObject jstarget(cx, args.thisv().toObjectOrNull());
-		        std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, jstarget, args.get(0), args.thisv()));
-		        auto lambda = [=](Entity* larg0) -> void {
-		            JSB_AUTOCOMPARTMENT_WITH_GLOBAL_OBJCET
-		            jsval largv[1];
-		            if (larg0) {
-		            largv[0] = OBJECT_TO_JSVAL(js_get_or_create_jsobject<Entity>(cx, (Entity*)larg0));
-		        } else {
-		            largv[0] = JSVAL_NULL;
-		        };
-		            JS::RootedValue rval(cx);
-		            bool succeed = func->invoke(1, &largv[0], &rval);
-		            if (!succeed && JS_IsExceptionPending(cx)) {
-		                JS_ReportPendingException(cx);
-		            }
-		        };
-		        arg0 = lambda;
-		    }
-		    else
-		    {
-		        arg0 = nullptr;
-		    }
-		} while(0)
-		;
-        JSB_PRECONDITION2(ok, cx, false, "js_banca_engine_Entity_setFinishFunc : Error processing arguments");
-        cobj->setFinishFunc(arg0);
+            if (args.get(0).isNull()) { arg0 = nullptr; break; }
+            if (!args.get(0).isObject()) { ok = false; break; }
+            js_proxy_t *jsProxy;
+            JS::RootedObject tmpObj(cx, args.get(0).toObjectOrNull());
+            jsProxy = jsb_get_js_proxy(tmpObj);
+            arg0 = (cocos2d::Ref*)(jsProxy ? jsProxy->ptr : NULL);
+            JSB_PRECONDITION2( arg0, cx, false, "Invalid Native Object");
+        } while (0);
+        JSB_PRECONDITION2(ok, cx, false, "js_banca_engine_Entity_setUserData : Error processing arguments");
+        cobj->setUserData(arg0);
         args.rval().setUndefined();
         return true;
     }
 
-    JS_ReportError(cx, "js_banca_engine_Entity_setFinishFunc : wrong number of arguments: %d, was expecting %d", argc, 1);
+    JS_ReportError(cx, "js_banca_engine_Entity_setUserData : wrong number of arguments: %d, was expecting %d", argc, 1);
     return false;
 }
 bool js_banca_engine_Entity_setUpdateFunc(JSContext *cx, uint32_t argc, jsval *vp)
@@ -1628,6 +1631,28 @@ bool js_banca_engine_Entity_setUpdateFunc(JSContext *cx, uint32_t argc, jsval *v
     }
 
     JS_ReportError(cx, "js_banca_engine_Entity_setUpdateFunc : wrong number of arguments: %d, was expecting %d", argc, 1);
+    return false;
+}
+bool js_banca_engine_Entity_getUserData(JSContext *cx, uint32_t argc, jsval *vp)
+{
+    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    JS::RootedObject obj(cx, args.thisv().toObjectOrNull());
+    js_proxy_t *proxy = jsb_get_js_proxy(obj);
+    Entity* cobj = (Entity *)(proxy ? proxy->ptr : NULL);
+    JSB_PRECONDITION2( cobj, cx, false, "js_banca_engine_Entity_getUserData : Invalid Native Object");
+    if (argc == 0) {
+        cocos2d::Ref* ret = cobj->getUserData();
+        JS::RootedValue jsret(cx);
+        if (ret) {
+            jsret = OBJECT_TO_JSVAL(js_get_or_create_jsobject<cocos2d::Ref>(cx, (cocos2d::Ref*)ret));
+        } else {
+            jsret = JSVAL_NULL;
+        };
+        args.rval().set(jsret);
+        return true;
+    }
+
+    JS_ReportError(cx, "js_banca_engine_Entity_getUserData : wrong number of arguments: %d, was expecting %d", argc, 0);
     return false;
 }
 bool js_banca_engine_Entity_getBodyVelocity(JSContext *cx, uint32_t argc, jsval *vp)
@@ -1874,6 +1899,52 @@ bool js_banca_engine_Entity_setPosition(JSContext *cx, uint32_t argc, jsval *vp)
     JS_ReportError(cx, "js_banca_engine_Entity_setPosition : wrong number of arguments: %d, was expecting %d", argc, 2);
     return false;
 }
+bool js_banca_engine_Entity_setFinishFunc(JSContext *cx, uint32_t argc, jsval *vp)
+{
+    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    bool ok = true;
+    JS::RootedObject obj(cx, args.thisv().toObjectOrNull());
+    js_proxy_t *proxy = jsb_get_js_proxy(obj);
+    Entity* cobj = (Entity *)(proxy ? proxy->ptr : NULL);
+    JSB_PRECONDITION2( cobj, cx, false, "js_banca_engine_Entity_setFinishFunc : Invalid Native Object");
+    if (argc == 1) {
+        std::function<void (Entity *)> arg0;
+        do {
+		    if(JS_TypeOfValue(cx, args.get(0)) == JSTYPE_FUNCTION)
+		    {
+		        JS::RootedObject jstarget(cx, args.thisv().toObjectOrNull());
+		        std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, jstarget, args.get(0), args.thisv()));
+		        auto lambda = [=](Entity* larg0) -> void {
+		            JSB_AUTOCOMPARTMENT_WITH_GLOBAL_OBJCET
+		            jsval largv[1];
+		            if (larg0) {
+		            largv[0] = OBJECT_TO_JSVAL(js_get_or_create_jsobject<Entity>(cx, (Entity*)larg0));
+		        } else {
+		            largv[0] = JSVAL_NULL;
+		        };
+		            JS::RootedValue rval(cx);
+		            bool succeed = func->invoke(1, &largv[0], &rval);
+		            if (!succeed && JS_IsExceptionPending(cx)) {
+		                JS_ReportPendingException(cx);
+		            }
+		        };
+		        arg0 = lambda;
+		    }
+		    else
+		    {
+		        arg0 = nullptr;
+		    }
+		} while(0)
+		;
+        JSB_PRECONDITION2(ok, cx, false, "js_banca_engine_Entity_setFinishFunc : Error processing arguments");
+        cobj->setFinishFunc(arg0);
+        args.rval().setUndefined();
+        return true;
+    }
+
+    JS_ReportError(cx, "js_banca_engine_Entity_setFinishFunc : wrong number of arguments: %d, was expecting %d", argc, 1);
+    return false;
+}
 bool js_banca_engine_Entity_getNodeDisplay(JSContext *cx, uint32_t argc, jsval *vp)
 {
     JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
@@ -1966,8 +2037,9 @@ void js_register_banca_engine_Entity(JSContext *cx, JS::HandleObject global) {
     };
 
     static JSFunctionSpec funcs[] = {
-        JS_FN("setFinishFunc", js_banca_engine_Entity_setFinishFunc, 1, JSPROP_PERMANENT | JSPROP_ENUMERATE),
+        JS_FN("setUserData", js_banca_engine_Entity_setUserData, 1, JSPROP_PERMANENT | JSPROP_ENUMERATE),
         JS_FN("setUpdateFunc", js_banca_engine_Entity_setUpdateFunc, 1, JSPROP_PERMANENT | JSPROP_ENUMERATE),
+        JS_FN("getUserData", js_banca_engine_Entity_getUserData, 0, JSPROP_PERMANENT | JSPROP_ENUMERATE),
         JS_FN("getBodyVelocity", js_banca_engine_Entity_getBodyVelocity, 0, JSPROP_PERMANENT | JSPROP_ENUMERATE),
         JS_FN("setTransform", js_banca_engine_Entity_setTransform, 2, JSPROP_PERMANENT | JSPROP_ENUMERATE),
         JS_FN("getType", js_banca_engine_Entity_getType, 0, JSPROP_PERMANENT | JSPROP_ENUMERATE),
@@ -1980,6 +2052,7 @@ void js_register_banca_engine_Entity(JSContext *cx, JS::HandleObject global) {
         JS_FN("setNodeDisplay", js_banca_engine_Entity_setNodeDisplay, 1, JSPROP_PERMANENT | JSPROP_ENUMERATE),
         JS_FN("release", js_banca_engine_Entity_release, 0, JSPROP_PERMANENT | JSPROP_ENUMERATE),
         JS_FN("setPosition", js_banca_engine_Entity_setPosition, 2, JSPROP_PERMANENT | JSPROP_ENUMERATE),
+        JS_FN("setFinishFunc", js_banca_engine_Entity_setFinishFunc, 1, JSPROP_PERMANENT | JSPROP_ENUMERATE),
         JS_FN("getNodeDisplay", js_banca_engine_Entity_getNodeDisplay, 0, JSPROP_PERMANENT | JSPROP_ENUMERATE),
         JS_FN("setVelocity", js_banca_engine_Entity_setVelocity, 2, JSPROP_PERMANENT | JSPROP_ENUMERATE),
         JS_FN("ctor", js_banca_engine_Entity_ctor, 0, JSPROP_PERMANENT | JSPROP_ENUMERATE),
@@ -2699,6 +2772,34 @@ bool js_banca_engine_Fish3D_start(JSContext *cx, uint32_t argc, jsval *vp)
     JS_ReportError(cx, "js_banca_engine_Fish3D_start : wrong number of arguments: %d, was expecting %d", argc, 1);
     return false;
 }
+bool js_banca_engine_Fish3D_setNodeDebug2D(JSContext *cx, uint32_t argc, jsval *vp)
+{
+    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    bool ok = true;
+    JS::RootedObject obj(cx, args.thisv().toObjectOrNull());
+    js_proxy_t *proxy = jsb_get_js_proxy(obj);
+    Fish3D* cobj = (Fish3D *)(proxy ? proxy->ptr : NULL);
+    JSB_PRECONDITION2( cobj, cx, false, "js_banca_engine_Fish3D_setNodeDebug2D : Invalid Native Object");
+    if (argc == 1) {
+        cocos2d::Node* arg0 = nullptr;
+        do {
+            if (args.get(0).isNull()) { arg0 = nullptr; break; }
+            if (!args.get(0).isObject()) { ok = false; break; }
+            js_proxy_t *jsProxy;
+            JS::RootedObject tmpObj(cx, args.get(0).toObjectOrNull());
+            jsProxy = jsb_get_js_proxy(tmpObj);
+            arg0 = (cocos2d::Node*)(jsProxy ? jsProxy->ptr : NULL);
+            JSB_PRECONDITION2( arg0, cx, false, "Invalid Native Object");
+        } while (0);
+        JSB_PRECONDITION2(ok, cx, false, "js_banca_engine_Fish3D_setNodeDebug2D : Error processing arguments");
+        cobj->setNodeDebug2D(arg0);
+        args.rval().setUndefined();
+        return true;
+    }
+
+    JS_ReportError(cx, "js_banca_engine_Fish3D_setNodeDebug2D : wrong number of arguments: %d, was expecting %d", argc, 1);
+    return false;
+}
 bool js_banca_engine_Fish3D_isOutsite(JSContext *cx, uint32_t argc, jsval *vp)
 {
     JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
@@ -2774,6 +2875,7 @@ void js_register_banca_engine_Fish3D(JSContext *cx, JS::HandleObject global) {
         JS_FN("enableAutoDie", js_banca_engine_Fish3D_enableAutoDie, 1, JSPROP_PERMANENT | JSPROP_ENUMERATE),
         JS_FN("update", js_banca_engine_Fish3D_update, 1, JSPROP_PERMANENT | JSPROP_ENUMERATE),
         JS_FN("start", js_banca_engine_Fish3D_start, 1, JSPROP_PERMANENT | JSPROP_ENUMERATE),
+        JS_FN("setNodeDebug2D", js_banca_engine_Fish3D_setNodeDebug2D, 1, JSPROP_PERMANENT | JSPROP_ENUMERATE),
         JS_FN("isOutsite", js_banca_engine_Fish3D_isOutsite, 0, JSPROP_PERMANENT | JSPROP_ENUMERATE),
         JS_FN("ctor", js_banca_engine_Fish3D_ctor, 0, JSPROP_PERMANENT | JSPROP_ENUMERATE),
         JS_FS_END

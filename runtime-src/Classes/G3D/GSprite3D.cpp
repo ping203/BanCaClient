@@ -234,6 +234,7 @@ void GSprite3D::createNode(NodeData* nodedata, Node* root, const GMaterialDatas&
 				auto mesh = GMesh::create(nodedata->id, getMeshIndexData(it->subMeshId),NULL);
 				mesh->hasShadow = hasReceivedShadow;
 				GLProgramState *programState = NULL;
+				//_meshes.pushBack(mesh);
 				if (mesh)
 				{
 					_meshes.pushBack(mesh);  
@@ -368,7 +369,7 @@ GSprite3D* GSprite3D::createSprite3DNode(NodeData* nodedata, ModelData* modeldat
 	{
 		sprite->setName(nodedata->id);
 		auto mesh = GMesh::create(nodedata->id, getMeshIndexData(modeldata->subMeshId),NULL);
-		_meshes.pushBack(mesh);
+		//_meshes.pushBack(mesh);
 		mesh->hasShadow = hasReceivedShadow;
 		GLProgramState *programState = NULL;
 		

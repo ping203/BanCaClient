@@ -10,6 +10,7 @@ Entity::Entity()
 	_body = NULL;
     //_updateFunc = NULL;
     _nodeDisplay = NULL;
+	_userData = NULL;
 }
 
 
@@ -167,9 +168,10 @@ void Bullet::update(float dt)
 Fish3D::Fish3D() : Entity()
 {
 	paused = true;
-	_type = FISH3D;
+	_type = FISH;
 	path = NULL;
 	enable_auto_die = true;
+	_debug = NULL;
 }
 Fish3D::~Fish3D()
 {
@@ -220,15 +222,29 @@ void Fish3D::update(float dt)
 // 		outsite = !rect.containsPoint(Vec2(pos.x / PM_RATIO, pos.y / PM_RATIO));
 // 	}
 
+	Mat4 transform = path->getTransformFromTimeline(time);
+	Vec3 pos;
+	cocos2d::Quaternion rot;
+	transform.getTranslation(&pos);
+	transform.getRotation(&rot);
 	if (_nodeDisplay)
 	{
-		Mat4 transform = path->getTransformFromTimeline(time);
-		Vec3 pos;
-		cocos2d::Quaternion rot;
-		transform.getTranslation(&pos);
-		transform.getRotation(&rot);
 		_nodeDisplay->setPosition3D(pos);
 		_nodeDisplay->setRotationQuat(rot);
+	}
+
+	Camera *cam = dynamic_cast<Camera *>(_userData);
+	if (cam)
+	{
+		Vec2 screenPositon = cam->project(pos);
+		screenPositon.y = Director::getInstance()->getWinSize().height - screenPositon.y;
+		if (_debug)
+		{
+			_debug->setPosition(screenPositon);
+			
+		}
+		if (dt > 0)
+			setTransform(Vec2(screenPositon.x / PM_RATIO, screenPositon.y / PM_RATIO), 0);
 	}
 
 	

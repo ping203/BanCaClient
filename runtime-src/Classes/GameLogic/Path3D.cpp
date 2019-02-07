@@ -1,6 +1,6 @@
 #include "Path3D.h"
 
-#define RESOLUTION_DEFAULT 200
+#define RESOLUTION_DEFAULT 75
 
 Path3D::Path3D(float duration)
 {

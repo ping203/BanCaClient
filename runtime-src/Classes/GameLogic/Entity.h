@@ -70,6 +70,15 @@ public:
     {
         return _nodeDisplay;
     }
+
+	void setUserData(Ref *userDat)
+	{
+		_userData = userDat;
+	}
+	Ref* getUserData(){
+		return _userData;
+	}
+
     
     virtual void update(float dt){
         if(_updateFunc)
@@ -94,7 +103,7 @@ public:
 	bool isNeedRemove(){ return need_remove; }
 public:
 	b2Body* _body;
-	void *_userData;
+	Ref *_userData;
     bool need_remove = false;
     Type _type;
     Node *_nodeDisplay;
@@ -203,11 +212,15 @@ public:
 	bool isOutsite() {
 		return outsite;
 	}
+	void setNodeDebug2D(Node* debug){
+		_debug = debug;
+	}
 
 	virtual void update(float dt);
 public:
 	bool paused;
 	Path3D *path;
+	Node* _debug;
 	float time;
 	bool enable_auto_die = true;
 

@@ -79,6 +79,12 @@ void GMesh::setMaterial(GMaterial *material)
 				programState->setUniformVec3("light_position", GMainLight::POSITION);
 				programState->setUniformVec3("light_intensities", GMainLight::INTENSITIES);
 				programState->setUniformFloat("light_ambient_coefficient", GMainLight::AMBIENT_COEFFICIENT);
+
+				if (GEnvironment::getInstance()->isEnableCausticAnimation())
+				{
+					programState->setUniformTexture("u_causticTex", GEnvironment::ACTIVE_CAUSTIC_TEX);
+				}
+
 				//programState->setUniformFloat("light_attenuation", GMainLight::ATTENUATION);
 
 // 				programState->setUniformFloat("spot_light_cullOff", GMainLight::cullOff);
@@ -214,7 +220,7 @@ void GMesh::onDraw(Renderer* renderer, float globalZOrder, const Mat4& transform
 		{
 			programState->setUniformVec4("u_color", color);
 			//programState->setUniformInt("u_hasShadow", hasShadow ? 1 : 0);
-			programState->setUniformMat4("u_MMatrix", transform);							// Model matrix
+			//programState->setUniformMat4("u_MMatrix", transform);							// Model matrix
 
 
 			// add Light
@@ -245,7 +251,7 @@ void GMesh::onDraw(Renderer* renderer, float globalZOrder, const Mat4& transform
 			}
 			if (GEnvironment::getInstance()->isEnableCausticAnimation())
 			{
-				//programState->setUniformTexture("u_causticTex", GEnvironment::ACTIVE_CAUSTIC_TEX);
+				programState->setUniformTexture("u_causticTex", GEnvironment::ACTIVE_CAUSTIC_TEX);
 			}
 			
 			// model matrix
