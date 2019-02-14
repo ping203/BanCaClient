@@ -129,7 +129,7 @@ void Display3DLayer::setupScene()
 
 
    __catMull = new CatmullRomCal(points, 200, true);
-   _path = new Path3D(15);
+   _path = new Path3D(15,true);
    _path->addPathPoint(Vec3(-100, 0, -100));
    _path->addPathPoint(Vec3(0, 0, 0));
    _path->addPathPoint(Vec3(100, 0, -100));

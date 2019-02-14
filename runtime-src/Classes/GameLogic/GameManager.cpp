@@ -134,16 +134,17 @@ void GameManager::_doUpdate(float dt)
     {
         if(m_entities[count]->need_remove)
         {
-			if (m_entities[count]->getType() == Entity::FISH)
-			{
-				onRealDestroyFish(m_entities[count]);
-			}
             if(m_entities[count]->_nodeDisplay)
             {
                 m_entities[count]->_nodeDisplay->removeFromParent();
             }
             m_world->DestroyBody(m_entities[count]->_body);
-            m_entities.erase(m_entities.begin() + count);
+            
+			if (m_entities[count]->getType() == Entity::FISH)
+			{
+				onRealDestroyFish(m_entities[count]);
+			}
+			m_entities.erase(m_entities.begin() + count);
         }
     }
 }
@@ -239,6 +240,8 @@ void GameManager::onRealDestroyFish(Entity *entity)
 	{
 		_fishDestroyDelegate(entity);
 	}
+	entity->release();
+	
 }
 
 void GameManager::destroyAllEntity(bool removeNode){

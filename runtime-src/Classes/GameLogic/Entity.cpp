@@ -26,11 +26,11 @@ float Entity::rotationFromVel(Vec2 vel)
     }
     else if(vel.y > 0)
     {
-        return atanf(vel.x / vel.y) * 180 / 3.14;
+        return atanf(vel.x / vel.y) * 180 / M_PI;
     }
     else
     {
-        return atanf(vel.x / vel.y) * 180 / 3.14 + 180;
+        return atanf(vel.x / vel.y) * 180 / M_PI + 180;
     }
 }
 
@@ -172,11 +172,14 @@ Fish3D::Fish3D() : Entity()
 	path = NULL;
 	enable_auto_die = true;
 	_debug = NULL;
+	_checkRotatin = NULL;
 }
 Fish3D::~Fish3D()
 {
 	if (path)
 		path->release();
+	if (_debug)
+		_debug->removeFromParentAndCleanup(true);
 }
 
 void Fish3D::pause(bool pause)
@@ -192,7 +195,12 @@ void Fish3D::start(float timeElapsed)
 	update(0);
 }
 
-
+void Fish3D::setNodeDisplay(Node *node)
+{
+	Entity::setNodeDisplay(node);
+	if (node)
+		_checkRotatin = node->getChildByName("checkRotation");
+}
 
 void Fish3D::update(float dt)
 {
@@ -238,13 +246,25 @@ void Fish3D::update(float dt)
 	{
 		Vec2 screenPositon = cam->project(pos);
 		screenPositon.y = Director::getInstance()->getWinSize().height - screenPositon.y;
+
+		Mat4 check;
+		Vec3 v3Check; Vec2 posCheck;
+		if (_checkRotatin)
+		{
+			check = _checkRotatin->getNodeToWorldTransform();
+			check.getTranslation(&v3Check);
+			posCheck = cam->project(v3Check);
+			posCheck.y = Director::getInstance()->getWinSize().height - posCheck.y;
+		}
+		float angle = rotationFromVel(posCheck - screenPositon) + 90;
+		//CCLOG("%f", angle);
 		if (_debug)
 		{
 			_debug->setPosition(screenPositon);
-			
+			_debug->setRotation(angle);
 		}
 		if (dt > 0)
-			setTransform(Vec2(screenPositon.x / PM_RATIO, screenPositon.y / PM_RATIO), 0);
+			setTransform(Vec2(screenPositon.x / PM_RATIO, screenPositon.y / PM_RATIO), -angle *  M_PI / 180);
 	}
 
 	

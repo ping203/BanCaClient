@@ -82,6 +82,7 @@ void register_all_banca_engine(JSContext* cx, JS::HandleObject obj);
 bool js_banca_engine_Path3D_getTransformFromTimeline(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_banca_engine_Path3D_addPathPoint(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_banca_engine_Path3D_calculate(JSContext *cx, uint32_t argc, jsval *vp);
+bool js_banca_engine_Path3D_getLength(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_banca_engine_Path3D_getDuration(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_banca_engine_Path3D_autorelease(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_banca_engine_Path3D_recalculateWithResolution(JSContext *cx, uint32_t argc, jsval *vp);

@@ -62,7 +62,7 @@ public:
     }
     float rotationFromVel(Vec2 vel);
     
-    void setNodeDisplay(Node *node)
+    virtual void setNodeDisplay(Node *node)
     {
         _nodeDisplay = node;
     }
@@ -215,12 +215,14 @@ public:
 	void setNodeDebug2D(Node* debug){
 		_debug = debug;
 	}
+	virtual void setNodeDisplay(Node *node);
 
 	virtual void update(float dt);
 public:
 	bool paused;
 	Path3D *path;
 	Node* _debug;
+	Node* _checkRotatin;
 	float time;
 	bool enable_auto_die = true;
 

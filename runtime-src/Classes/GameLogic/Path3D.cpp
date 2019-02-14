@@ -1,12 +1,13 @@
 #include "Path3D.h"
 
-#define RESOLUTION_DEFAULT 75
+#define RESOLUTION_DEFAULT 15
 
-Path3D::Path3D(float duration)
+Path3D::Path3D(float duration, bool constantTime)
 {
 	_catMullRom = NULL;
 	__caculated = false;
 	__calLength = false;
+	_constantTime = constantTime;
 	_resolution = RESOLUTION_DEFAULT;
 
 	setDuration(duration);
@@ -86,7 +87,7 @@ Mat4 Path3D::getTransformFromTimeline(float time)
 	if (_duration <= 0 || _knotPoints.size() <= 0)
 		return ret;
 	int size = _catMullRom->splinePoints.size();
-	float percent = time * size/ _duration;
+	float percent = size * (_constantTime ? _catMullRom->getUtoTmapping(time / _duration) : (time / _duration));
 	int idx = (int)percent;
 	if (idx >= size)
 		idx = size - 1;

@@ -103,8 +103,6 @@ public:
 			+ (3 * t * t - 4 * t + 1) * p1
 			+ (-6 * t * t + 6 * t) * p2
 			+ (3 * t * t - 2 * t) * p3).normalized();
-
-		
 	}
 
 	math::Vector3 start3D() const  {

@@ -42,6 +42,7 @@ public:
 	bool closedLoop;
 	std::vector<CatmullRomPoint> splinePoints;
 	std::vector<Vector3> controlPoints;
+	std::vector<float> _cacheArcLengths;
 
 	//Sets the length of the point array based on resolution/closed loop.
 	void InitializeProperties()
@@ -56,6 +57,7 @@ public:
 			pointsToCreate = resolution * (controlPoints.size() - 1);
 		}
 		splinePoints.resize(pointsToCreate);
+		_cacheArcLengths.resize(pointsToCreate);
 	}
 
 	//Math stuff to generate the spline points
@@ -68,6 +70,8 @@ public:
 
 		// First for loop goes through each individual control point and connects it to the next, so 0-1, 1-2, 2-3 and so on
 		int closedAdjustment = closedLoop ? 0 : 1;
+		Vector3 checkPoint(controlPoints[0]);
+		float sum = 0;
 		for (int currentPoint = 0; currentPoint < controlPoints.size() - closedAdjustment; currentPoint++)
 		{
 			bool closedLoopFinalPoint = (closedLoop && currentPoint == controlPoints.size() - 1);
@@ -146,8 +150,70 @@ public:
 				CatmullRomPoint point = Evaluate(p0, p1, m0, m1, t);
 
 				splinePoints[currentPoint * resolution + tesselatedPoint] = point;
+
+				sum += point.position.distanceTo(checkPoint);
+				checkPoint = point.position;
+
+				_cacheArcLengths[currentPoint * resolution + tesselatedPoint] = sum;
 			}
 		}
+	}
+
+	float getUtoTmapping(float u, float distance = 0)
+	{
+		//std::vector<float> arcLengths = getLengths();
+
+		float targetArcLength; // The targeted u distance value to get
+
+		if (distance > 0) {
+			targetArcLength = distance;
+		}
+		else {
+			targetArcLength = u * _cacheArcLengths.back();
+		}
+
+		// binary search for the index with largest value smaller than target u distance
+		float low = 0, high = _cacheArcLengths.size() - 1;
+		while (low <= high) {
+
+			int i = low + (high - low) / 2; // less likely to overflow
+
+			float comparison = _cacheArcLengths[i] - targetArcLength;
+
+			if (comparison < 0) {
+
+				low = i + 1;
+			}
+			else if (comparison > 0) {
+
+				high = i - 1;
+			}
+			else {
+
+				high = i;
+				break;
+				// DONE
+			}
+		}
+
+		int i = high;
+
+		if (_cacheArcLengths[i] == targetArcLength) {
+
+			return i * 1.0 / (_cacheArcLengths.size() - 1);
+		}
+
+		// we could get finer grain at lengths, or use simple interpolation between two points
+		float lengthBefore = _cacheArcLengths[i];
+		float lengthAfter = _cacheArcLengths[i + 1];
+
+		float segmentLength = lengthAfter - lengthBefore;
+
+		// determine where we are between the 'before' and 'after' points
+		float segmentFraction = (targetArcLength - lengthBefore) / segmentLength;
+
+		// add that fractional amount to t
+		return (i + segmentFraction) / (_cacheArcLengths.size() - 1);
 	}
 
 	//Evaluates curve at t[0, 1]. Returns point/normal/tan struct. [0, 1] means clamped between 0 and 1.

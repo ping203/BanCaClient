@@ -1114,6 +1114,24 @@ bool js_banca_engine_Path3D_calculate(JSContext *cx, uint32_t argc, jsval *vp)
     JS_ReportError(cx, "js_banca_engine_Path3D_calculate : wrong number of arguments: %d, was expecting %d", argc, 0);
     return false;
 }
+bool js_banca_engine_Path3D_getLength(JSContext *cx, uint32_t argc, jsval *vp)
+{
+    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    JS::RootedObject obj(cx, args.thisv().toObjectOrNull());
+    js_proxy_t *proxy = jsb_get_js_proxy(obj);
+    Path3D* cobj = (Path3D *)(proxy ? proxy->ptr : NULL);
+    JSB_PRECONDITION2( cobj, cx, false, "js_banca_engine_Path3D_getLength : Invalid Native Object");
+    if (argc == 0) {
+        double ret = cobj->getLength();
+        JS::RootedValue jsret(cx);
+        jsret = DOUBLE_TO_JSVAL(ret);
+        args.rval().set(jsret);
+        return true;
+    }
+
+    JS_ReportError(cx, "js_banca_engine_Path3D_getLength : wrong number of arguments: %d, was expecting %d", argc, 0);
+    return false;
+}
 bool js_banca_engine_Path3D_getDuration(JSContext *cx, uint32_t argc, jsval *vp)
 {
     JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
@@ -1231,9 +1249,11 @@ bool js_banca_engine_Path3D_constructor(JSContext *cx, uint32_t argc, jsval *vp)
     JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
     bool ok = true;
     double arg0 = 0;
+    bool arg1;
     ok &= JS::ToNumber( cx, args.get(0), &arg0) && !std::isnan(arg0);
+    arg1 = JS::ToBoolean(args.get(1));
     JSB_PRECONDITION2(ok, cx, false, "js_banca_engine_Path3D_constructor : Error processing arguments");
-    Path3D* cobj = new (std::nothrow) Path3D(arg0);
+    Path3D* cobj = new (std::nothrow) Path3D(arg0, arg1);
 
     js_type_class_t *typeClass = js_get_type_from_native<Path3D>(cobj);
 
@@ -1250,9 +1270,11 @@ static bool js_banca_engine_Path3D_ctor(JSContext *cx, uint32_t argc, jsval *vp)
     JS::RootedObject obj(cx, args.thisv().toObjectOrNull());
     bool ok = true;
     double arg0 = 0;
+    bool arg1;
     ok &= JS::ToNumber( cx, args.get(0), &arg0) && !std::isnan(arg0);
+    arg1 = JS::ToBoolean(args.get(1));
     JSB_PRECONDITION2(ok, cx, false, "js_Path3D_ctor : Error processing arguments");
-    Path3D *nobj = new (std::nothrow) Path3D(arg0);
+    Path3D *nobj = new (std::nothrow) Path3D(arg0, arg1);
     js_proxy_t* p = jsb_new_proxy(nobj, obj);
     jsb_ref_init(cx, &p->obj, nobj, "Path3D");
     bool isFound = false;
@@ -1284,6 +1306,7 @@ void js_register_banca_engine_Path3D(JSContext *cx, JS::HandleObject global) {
         JS_FN("getTransformFromTimeline", js_banca_engine_Path3D_getTransformFromTimeline, 1, JSPROP_PERMANENT | JSPROP_ENUMERATE),
         JS_FN("addPathPoint", js_banca_engine_Path3D_addPathPoint, 1, JSPROP_PERMANENT | JSPROP_ENUMERATE),
         JS_FN("calculate", js_banca_engine_Path3D_calculate, 0, JSPROP_PERMANENT | JSPROP_ENUMERATE),
+        JS_FN("getLength", js_banca_engine_Path3D_getLength, 0, JSPROP_PERMANENT | JSPROP_ENUMERATE),
         JS_FN("getDuration", js_banca_engine_Path3D_getDuration, 0, JSPROP_PERMANENT | JSPROP_ENUMERATE),
         JS_FN("autorelease", js_banca_engine_Path3D_autorelease, 0, JSPROP_PERMANENT | JSPROP_ENUMERATE),
         JS_FN("recalculateWithResolution", js_banca_engine_Path3D_recalculateWithResolution, 1, JSPROP_PERMANENT | JSPROP_ENUMERATE),
